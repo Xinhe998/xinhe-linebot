@@ -1,10 +1,11 @@
 import linebot from 'linebot';
-// import express from 'express';
+import bodyParser from 'body-parser';
+import express from 'express';
 // import path from 'path';
 
 require('dotenv').config();
 
-// const app = express();
+const app = express();
 
 // 建立linebot物件
 const bot = linebot({
@@ -13,15 +14,34 @@ const bot = linebot({
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 });
 
+const parser = bodyParser.json({
+  verify(req, res, buf, encoding) {
+    req.rawBody = buf.toString(encoding);
+  },
+});
+
+app.post('/linewebhook', parser, (req, res) => {
+  if (!bot.verify(req.rawBody, req.get('X-Line-Signature'))) {
+    return res.sendStatus(400);
+  }
+  bot.parse(req.body);
+  return res.json({});
+});
+
 bot.on('message', (event) => {
   // event.message.text是使用者傳給bot的訊息
-  const replyMsg = `Hello你剛才說的是:${event.message.text}`;
-
-  event.reply(replyMsg).then((data) => {
-    console.log(data);
-  }).catch((error) => {
-    console.log(error);
+  // const replyMsg = `Hello你剛才說的是:${event.message.text}`;
+  let replyMsg;
+  event.source.profile().then((profile) => {
+    replyMsg = `Hello, ${profile.displayName}`;
+    event.reply(replyMsg);
   });
+
+  // event.reply(replyMsg).then((data) => {
+  //   console.log(data);
+  // }).catch((error) => {
+  //   console.log(error);
+  // });
 });
 
 bot.on('follow', (event) => {
