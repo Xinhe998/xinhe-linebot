@@ -1,10 +1,10 @@
 import linebot from 'linebot';
-import express from 'express';
-import path from 'path';
+// import express from 'express';
+// import path from 'path';
 
 require('dotenv').config();
 
-const app = express();
+// const app = express();
 
 // 建立linebot物件
 const bot = linebot({
