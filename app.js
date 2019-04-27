@@ -3,7 +3,8 @@ import express from 'express';
 import path from 'path';
 
 require('dotenv').config();
-require('./index.js');
+
+const app = express();
 
 // 建立linebot物件
 const bot = linebot({
@@ -11,16 +12,6 @@ const bot = linebot({
   channelSecret: process.env.CHANNEL_SECRET,
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
 });
-
-const app = express();
-const linebotParser = bot.parser();
-
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '/')));
-app.get('/', (req, res) => {
-  res.sendFile(__dirname);
-});
-app.post('/linewebhook', linebotParser);
 
 bot.on('message', (event) => {
   // event.message.text是使用者傳給bot的訊息
@@ -57,6 +48,6 @@ bot.on('beacon', (event) => {
   event.reply(`beacon: ${event.beacon.hwid}`);
 });
 
-bot.listen(process.env.PORT || 80, () => {
+bot.listen('/linewebhook', 3000, () => {
   console.log('LineBot is running.');
 });

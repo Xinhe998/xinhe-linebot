@@ -1,6 +1,7 @@
-const path = require('path');
 const webpack = require('webpack');
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const nodeExternals = require('webpack-node-externals');
 
 const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
   template: '!!html-webpack-plugin/lib/loader.js!./index.html',
@@ -12,16 +13,17 @@ const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
 });
 
 module.exports = {
+  target: 'node',
   // JavaScript執行的入口
   entry: {
     main: './app.js',
   },
   output: {
     // 將輸出的檔案放到這個資料夾下
-    path: path.join(__dirname, 'dist/'),
+    path: path.join(__dirname, 'dist'),
     // 將所有依賴的模組都合併輸出到這個檔案
-    filename: 'index_bundle.js',
-    // publicPath: '/',
+    filename: '[name].bundle.js',
+    publicPath: 'dist/',
   },
   mode: 'development',
   node: {
@@ -43,13 +45,9 @@ module.exports = {
         test: /\.(css|scss|sass)$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
-      {
-        test: /\.(jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|woff|woff2|eot|ttf)(\?v=\d+\.\d+\.\d+)?$/,
-        loader: 'url-loader?limit=1024&name=[sha512:hash:base64:7].[ext]',
-      },
     ],
   },
-  devtool: 'eval',
+  devtool: 'source-map',
   // webpack-dev-server 設定
   devServer: {
     contentBase: path.join(__dirname, 'dist'),
