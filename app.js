@@ -152,6 +152,20 @@ const respondTo = async (event) => {
     });
   };
 
+  fsm.workExperience = async () => {
+    lastMessage = await event.reply({
+      type: 'text',
+      text: '經歷～～～ ',
+    });
+  };
+
+  fsm.skills = async () => {
+    lastMessage = await event.reply({
+      type: 'text',
+      text: '技能～～～ ',
+    });
+  };
+
   const action = eventFromStateAndMessageText(fsm.state, text);
   await fsm[action.toString()]();
   console.log(fsm.history);
