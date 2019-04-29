@@ -45,6 +45,10 @@ module.exports = {
         test: /\.(css|scss|sass)$/,
         use: ['style-loader', 'css-loader', 'sass-loader'],
       },
+      {
+        test: /\.(jpe?g|JPE?G|png|PNG|gif|GIF|svg|SVG|woff|woff2|eot|ttf)(\?v=\d+\.\d+\.\d+)?$/,
+        loader: 'url-loader?limit=1024&name=[sha512:hash:base64:7].[ext]',
+      },
     ],
   },
   devtool: 'source-map',
