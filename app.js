@@ -1,6 +1,5 @@
-import linebot from 'linebot';
-import bodyParser from 'body-parser';
 import express from 'express';
+import * as line from '@line/bot-sdk';
 import StateMachine from 'javascript-state-machine';
 
 require('dotenv').config();
@@ -8,26 +7,13 @@ require('babel-polyfill');
 
 const app = express();
 
-// 建立linebot物件
-const bot = linebot({
+const config = {
   channelId: process.env.CHANNEL_ID,
   channelSecret: process.env.CHANNEL_SECRET,
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-});
+};
+const client = new line.Client(config);
 
-const parser = bodyParser.json({
-  verify(req, res, buf, encoding) {
-    req.rawBody = buf.toString(encoding);
-  },
-});
-
-app.post('/linewebhook', parser, (req, res) => {
-  if (!bot.verify(req.rawBody, req.get('X-Line-Signature'))) {
-    return res.sendStatus(400);
-  }
-  bot.parse(req.body);
-  return res.json({});
-});
 
 // State Machine
 const StateMachineHistory = require('javascript-state-machine/lib/history');
@@ -66,27 +52,90 @@ const eventFromStateAndMessageText = (state, text) => {
       return 'gotStart';
     }
   }
-  case 'waitingname':
-    return 'gotName';
-  case 'echoing':
-    return text === '/stop' ? 'gotstop' : 'gottext';
-  case 'confirm':
-    if (text === 'yes') {
-      return 'confirmed';
-    }
-    if (text === 'no') {
-      return 'cancelled';
-    }
-    return 'invalid';
   default:
     return 'gotStart';
   }
 };
 
 const fsm = createFsm();
-fsm.gotStart();
 
-const respondTo = async (event) => {
+const stateMethod = {};
+
+stateMethod.gotStart = (event) => {
+  fsm.gotStart();
+  client.getProfile(event.source.userId).then((profile) => {
+    client.replyMessage(event.replyToken, {
+      type: 'template',
+      altText: 'Hi, I am Xinhe.',
+      template: {
+        type: 'buttons',
+        thumbnailImageUrl: 'https://i.imgur.com/gopa6mjl.png',
+        title: `${profile.displayName}, 很高興認識你！`,
+        text: '想從哪方面開始聊呢？',
+        actions: [
+          {
+            type: 'postback',
+            label: 'Xinhe自我介紹一下吧！',
+            text: '自我介紹',
+            data: '自我介紹',
+          },
+          {
+            type: 'postback',
+            label: '實習工作經歷',
+            data: 'action=add&itemid=123',
+            text: '實習工作經歷',
+          },
+          {
+            type: 'postback',
+            label: '專案作品',
+            data: 'action=add&itemid=123',
+            text: '專案作品',
+          },
+          {
+            type: 'uri',
+            label: '專長＆技能樹',
+            uri: 'http://example.com/page/123',
+            text: '專長＆技能樹',
+          },
+        ],
+      },
+    });
+  });
+};
+
+stateMethod.selfIntro = (event) => {
+  fsm.selfIntro();
+  client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: 'Hello～我是許歆荷，一位對於技術充滿好奇與熱忱的網頁全端工程師，在學習新的方法或專業技術時總是保持著積極主動的態度！ ',
+  });
+};
+
+stateMethod.projects = (event) => {
+  fsm.projects();
+  client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: '專案～～～ ',
+  });
+};
+
+stateMethod.workExperience = (event) => {
+  fsm.workExperience();
+  client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: '經歷～～～ ',
+  });
+};
+
+stateMethod.skills = (event) => {
+  fsm.skills();
+  client.replyMessage(event.replyToken, {
+    type: 'text',
+    text: '技能～～～ ',
+  });
+};
+
+const respondTo = (event) => {
   let text = '';
   if (event.type === 'message') {
     // eslint-disable-next-line prefer-destructuring
@@ -94,109 +143,32 @@ const respondTo = async (event) => {
   } else if (event.type === 'postback') {
     text = event.postback.data;
   }
-  // eslint-disable-next-line no-unused-vars
-  let lastMessage;
-
-  fsm.gotStart = () => {
-    lastMessage = event.source.profile().then((profile) => {
-      event.reply({
-        type: 'template',
-        altText: 'Hi, I am Xinhe.',
-        template: {
-          type: 'buttons',
-          thumbnailImageUrl: 'https://i.imgur.com/gopa6mjl.png',
-          title: `${profile.displayName}, 很高興認識你！`,
-          text: '想從哪方面開始聊呢？',
-          actions: [
-            {
-              type: 'postback',
-              label: 'Xinhe自我介紹一下吧！',
-              text: '自我介紹',
-              data: '自我介紹',
-            },
-            {
-              type: 'postback',
-              label: '實習工作經歷',
-              data: 'action=add&itemid=123',
-              text: '實習工作經歷',
-            },
-            {
-              type: 'postback',
-              label: '專案作品',
-              data: 'action=add&itemid=123',
-              text: '專案作品',
-            },
-            {
-              type: 'uri',
-              label: '專長＆技能樹',
-              uri: 'http://example.com/page/123',
-              text: '專長＆技能樹',
-            },
-          ],
-        },
-      });
-    });
-  };
-
-  fsm.selfIntro = async () => {
-    lastMessage = await event.reply({
-      type: 'text',
-      text: 'Hello～我是許歆荷，一位對於技術充滿好奇與熱忱的網頁全端工程師，在學習新的方法或專業技術時總是保持著積極主動的態度！ ',
-    });
-  };
-
-  fsm.projects = async () => {
-    lastMessage = await event.reply({
-      type: 'text',
-      text: '專案～～～ ',
-    });
-  };
-
-  fsm.workExperience = async () => {
-    lastMessage = await event.reply({
-      type: 'text',
-      text: '經歷～～～ ',
-    });
-  };
-
-  fsm.skills = async () => {
-    lastMessage = await event.reply({
-      type: 'text',
-      text: '技能～～～ ',
-    });
-  };
 
   const action = eventFromStateAndMessageText(fsm.state, text);
-  await fsm[action.toString()]();
+  stateMethod[action](event);
   console.log(fsm.history);
 };
 
-bot.on('message', (event) => {
-  respondTo(event);
+
+function handleEvent(event) {
+  switch (event.type) {
+  case 'message':
+    if (event.type !== 'message') {
+      return Promise.resolve(null);
+    }
+    return respondTo(event);
+  default:
+    throw new Error('Unknown message');
+  }
+}
+
+
+app.post('/linewebhook', line.middleware(config), (req, res) => {
+  Promise
+    .all(req.body.events.map(handleEvent))
+    .then(result => res.json(result));
 });
 
-bot.on('follow', (event) => {
-  // event.reply(`follow: ${event.source.userId}`);
-  fsm.gotStart();
-});
-
-// bot.on('unfollow', (event) => {
-//   event.reply(`unfollow: ${event.source.userId}`);
-// });
-
-// bot.on('join', (event) => {
-//   event.reply(`join: ${event.source.groupId}`);
-// });
-
-// bot.on('leave', (event) => {
-//   event.reply(`leave: ${event.source.groupId}`);
-// });
-
-// bot.on('postback', (event) => {
-//   event.reply(`postback: ${event.postback.data}`);
-//   respondTo(event);
-// });
-
-bot.listen('/linewebhook', 3000, () => {
+app.listen(3000, () => {
   console.log('LineBot is running.');
 });
