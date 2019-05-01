@@ -9,7 +9,7 @@
 - Babel and Webpack4
 
 ## Getting Started
-1. Start developing.
+1. Installation.
     ```
     cd xinhe-linebot/
     npm install
@@ -21,4 +21,8 @@
     CHANNEL_SECRET='channel secret'
     CHANNEL_ACCESS_TOKEN='channel access token'
     ```
-3. My LINE chatbot server is now running at http://localhost:3000
+3. Start developing.
+    ```
+    npm start
+    ```
+4. My LINE chatbot server is now running at http://localhost:3000
