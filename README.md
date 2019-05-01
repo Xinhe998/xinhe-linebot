@@ -1,5 +1,4 @@
 # Xinhe on Line Chatbot
-> 2019 LINE TechFresh Internship - Pretest <br />
 > LINE chatbot with Node.js
 
 <img src="./screenshot.png" />
