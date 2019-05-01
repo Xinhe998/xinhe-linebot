@@ -28,11 +28,22 @@ function createFsm() {
       { name: 'interest', from: 'selfIntro', to: 'selfIntro_Interest' }, // 自我介紹_喜歡的事物
       { name: 'leaveInterest', from: 'selfIntro_Interest', to: 'mainMenu' }, // 離開自我介紹_喜歡的事物
       { name: 'laeveSelfIntro', from: 'selfIntro', to: 'mainMenu' }, // 離開自我介紹
+
       { name: 'workExperience', from: 'mainMenu', to: 'workExperience' }, // 工作經驗
+      { name: 'leaveWorkExperience', from: 'workExperience', to: 'mainMenu' }, // 工作經驗
+
       { name: 'advantech', from: 'workExperience', to: 'workExperience_Advantech' }, // 工作經驗_advantech
       { name: 'leaveAdvantech', from: 'workExperience_Advantech', to: 'mainMenu' }, // 離開工作經驗_advantech（回選單）
-      { name: 'advantechBackToWorkExperience', from: 'workExperience_Advantech', to: 'workExperience' }, // 回工作經驗
-      { name: 'leaveWorkExperience', from: 'workExperience', to: 'mainMenu' }, // 工作經驗
+      { name: 'advantechBackToWorkExperience', from: 'workExperience_Advantech', to: 'workExperience' }, // advantech回工作經驗
+
+      { name: 'trunkStudio', from: 'workExperience', to: 'workExperience_TrunkStudio' }, // 工作經驗_trunk
+      { name: 'leaveTrunkStudio', from: 'workExperience_TrunkStudio', to: 'mainMenu' }, // 離開工作經驗_trunk（回選單）
+      { name: 'trunkStudioBackToWorkExperience', from: 'workExperience_TrunkStudio', to: 'workExperience' }, // trunk回工作經驗
+
+      { name: 'taiwanCloud', from: 'workExperience', to: 'workExperience_TaiwanCloud' }, // 工作經驗_taiwanCloud
+      { name: 'leaveTaiwanCloud', from: 'workExperience_TaiwanCloud', to: 'mainMenu' }, // 離開工作經驗_taiwanCloud（回選單）
+      { name: 'taiwanCloudBackToWorkExperience', from: 'workExperience_TaiwanCloud', to: 'workExperience' }, // taiwanCloud回工作經驗
+
       { name: 'projects', from: 'mainMenu', to: 'projects' }, // 專案作品
       { name: 'skills', from: 'mainMenu', to: 'skills' }, // 專長技能
     ],
@@ -94,6 +105,10 @@ const eventFromStateAndMessageText = (state, text) => {
     switch (text) {
     case 'Xinhe 在研華科技...':
       return 'advantech';
+    case 'Xinhe 在創科資訊...':
+      return 'trunkStudio';
+    case 'Xinhe 在臺灣寬雲...':
+      return 'taiwanCloud';
     default:
       return 'leaveWorkExperience';
     }
@@ -107,6 +122,17 @@ const eventFromStateAndMessageText = (state, text) => {
       return 'advantechBackToWorkExperience';
     default:
       return 'advantechBackToWorkExperience';
+    }
+  }
+  case 'workExperience_TrunkStudio':
+  {
+    switch (text) {
+    case '回選單':
+      return 'leaveTrunkStudio';
+    case '回工作經驗':
+      return 'trunkStudioBackToWorkExperience';
+    default:
+      return 'trunkStudioBackToWorkExperience';
     }
   }
   default:
@@ -362,9 +388,10 @@ const workExperienceMenu = (event) => {
               {
                 type: 'button',
                 action: {
-                  type: 'uri',
+                  type: 'postback',
                   label: '了解更多',
-                  uri: 'https://linecorp.com',
+                  data: 'trunkStudio',
+                  text: 'Xinhe 在創科資訊...',
                 },
                 color: '#B9AFAF',
                 style: 'primary',
@@ -465,9 +492,10 @@ const workExperienceMenu = (event) => {
               {
                 type: 'button',
                 action: {
-                  type: 'uri',
+                  type: 'postback',
                   label: '了解更多',
-                  uri: 'https://linecorp.com',
+                  data: 'taiwanCloud',
+                  text: 'Xinhe 在臺灣寬雲...',
                 },
                 color: '#B9AFAF',
                 style: 'primary',
@@ -481,6 +509,9 @@ const workExperienceMenu = (event) => {
 };
 
 stateMethod.gotStart = (event) => {
+  if (fsm.state !== 'start') {
+    fsm.init();
+  }
   fsm.gotStart(); // change state
   mainMenu(event);
 };
@@ -771,13 +802,204 @@ stateMethod.advantech = (event) => {
   ]);
 };
 
+stateMethod.trunkStudio = (event) => {
+  fsm.trunkStudio();
+  client.replyMessage(event.replyToken, [
+    {
+      type: 'flex',
+      altText: '利用Vue.js, EJS語法，參與 「VIPT JOB」 官方網站(提供外籍移工及企業的人力銀行) 開發，並協助i18n多國語系建置。',
+      contents: {
+        type: 'bubble',
+        direction: 'ltr',
+        header: {
+          type: 'box',
+          layout: 'vertical',
+          contents: [
+            {
+              type: 'text',
+              text: '專案一',
+              margin: 'none',
+              align: 'center',
+              weight: 'bold',
+            },
+          ],
+        },
+        body: {
+          type: 'box',
+          layout: 'vertical',
+          contents: [
+            {
+              type: 'text',
+              text: '利用Vue.js, EJS語法，參與 「VIPT JOB」 官方網站(提供外籍移工及企業的人力銀行) 開發，並協助i18n多國語系建置。',
+              align: 'start',
+              wrap: true,
+            },
+          ],
+        },
+        footer: {
+          type: 'box',
+          layout: 'horizontal',
+          contents: [
+            {
+              type: 'button',
+              action: {
+                type: 'uri',
+                label: '查看 VIPT JOB',
+                uri: 'https://viptjob.com',
+              },
+              color: '#73657B',
+              style: 'primary',
+              height: 'sm',
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: 'flex',
+      altText: '利用React Native，參與 「凱擘 Healthcare健康保健室」 app 開發。',
+      contents: {
+        type: 'bubble',
+        direction: 'ltr',
+        header: {
+          type: 'box',
+          layout: 'vertical',
+          contents: [
+            {
+              type: 'text',
+              text: '專案二',
+              margin: 'none',
+              align: 'center',
+              weight: 'bold',
+            },
+          ],
+        },
+        body: {
+          type: 'box',
+          layout: 'vertical',
+          contents: [
+            {
+              type: 'text',
+              align: 'start',
+              text: '利用React Native，參與 「凱擘 Healthcare健康保健室」 app 開發。',
+              wrap: true,
+            },
+          ],
+        },
+        footer: {
+          type: 'box',
+          layout: 'horizontal',
+          contents: [
+            {
+              type: 'button',
+              action: {
+                type: 'uri',
+                label: '取得 Healthcare健康保健室',
+                uri: 'https://itunes.apple.com/tw/app/healthcare%E5%81%A5%E5%BA%B7%E4%BF%9D%E5%81%A5%E5%AE%A4/id1239683214?mt=8',
+              },
+              color: '#73657B',
+              style: 'primary',
+              height: 'sm',
+            },
+          ],
+        },
+      },
+    },
+    {
+      type: 'text',
+      text: '熟悉Git版本管控, JavaScript, React, EJS語法與敏捷開發。',
+    },
+    {
+      type: 'flex',
+      altText: '獲得全公司票選表現最佳實習生！',
+      contents: {
+        type: 'bubble',
+        direction: 'ltr',
+        hero: {
+          type: 'image',
+          url: 'https://i.imgur.com/xdTKW4Zh.jpg',
+          size: 'full',
+          aspectRatio: '1.51:1',
+          aspectMode: 'fit',
+        },
+        body: {
+          type: 'box',
+          layout: 'vertical',
+          contents: [
+            {
+              type: 'text',
+              text: '獲得全公司票選表現最佳實習生！',
+              align: 'start',
+            },
+          ],
+        },
+        footer: {
+          type: 'box',
+          layout: 'horizontal',
+          contents: [
+            {
+              type: 'button',
+              action: {
+                type: 'postback',
+                label: '回工作經驗',
+                data: '回工作經驗',
+                text: '回工作經驗',
+              },
+              flex: 1,
+              color: '#83728B',
+              margin: 'md',
+              style: 'primary',
+            },
+            {
+              type: 'button',
+              action: {
+                type: 'postback',
+                label: '回選單',
+                data: '回選單',
+                text: '回選單',
+              },
+              color: '#E1D5D5',
+              margin: 'md',
+              style: 'secondary',
+            },
+          ],
+        },
+      },
+    },
+  ]);
+};
+
+stateMethod.taiwanCloud = (event) => {
+  fsm.taiwanCloud();
+  client.replyMessage(event.replyToken, [
+    {
+      type: 'text',
+      text: '\u{100077} 使用 HTML, CSS, jQuery, C# .NET MVC 5 參與雲端ERP系統開發。',
+    },
+    {
+      type: 'text',
+      text: '\u{100077} 熟悉 C# .NET MVC 5 與 jQuery。',
+    },
+  ]);
+};
+
 stateMethod.leaveAdvantech = (event) => {
-  fsm.leaveAdventch(); // change state
+  fsm.leaveAdvantech(); // change state
   mainMenu(event);
 };
 
 stateMethod.advantechBackToWorkExperience = (event) => {
   fsm.advantechBackToWorkExperience(); // change state
+  workExperienceMenu(event);
+};
+
+stateMethod.leaveTrunkStudio = (event) => {
+  fsm.leaveTrunkStudio(); // change state
+  mainMenu(event);
+};
+
+stateMethod.trunkStudioBackToWorkExperience = (event) => {
+  fsm.trunkStudioBackToWorkExperience(); // change state
   workExperienceMenu(event);
 };
 
