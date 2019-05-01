@@ -1,16 +1,5 @@
 const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-// const nodeExternals = require('webpack-node-externals');
-
-const HTMLWebpackPluginConfig = new HtmlWebpackPlugin({
-  template: '!!html-webpack-plugin/lib/loader.js!./index.html',
-  filename: 'index.html',
-  inject: 'body',
-  hash: true,
-  // favicon: `${__dirname}/public/favicon.ico`,
-  title: 'Xinhe on Line',
-});
 
 module.exports = {
   target: 'node',
@@ -61,5 +50,5 @@ module.exports = {
     historyApiFallback: true,
     hot: true,
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(), HTMLWebpackPluginConfig],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 };

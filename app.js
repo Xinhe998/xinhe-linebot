@@ -4,8 +4,6 @@ import { fsm, eventFromStateAndMessageText } from './src/fsm';
 import { config } from './src/botClient';
 import stateMethod from './src/stateMethods';
 
-require('babel-polyfill');
-
 const app = express();
 
 const respondTo = (event) => {
@@ -44,6 +42,8 @@ app.post('/linewebhook', line.middleware(config), (req, res) => {
     .all(req.body.events.map(handleEvent))
     .then(result => res.json(result));
 });
+
+app.use('/', express.static('public'));
 
 app.listen(3000, () => {
   console.log('LineBot is running.');
