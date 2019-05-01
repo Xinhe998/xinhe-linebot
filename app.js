@@ -29,6 +29,10 @@ function createFsm() {
       { name: 'leaveInterest', from: 'selfIntro_Interest', to: 'mainMenu' }, // 離開自我介紹_喜歡的事物
       { name: 'laeveSelfIntro', from: 'selfIntro', to: 'mainMenu' }, // 離開自我介紹
       { name: 'workExperience', from: 'mainMenu', to: 'workExperience' }, // 工作經驗
+      { name: 'advantech', from: 'workExperience', to: 'workExperience_Advantech' }, // 工作經驗_advantech
+      { name: 'leaveAdvantech', from: 'workExperience_Advantech', to: 'mainMenu' }, // 離開工作經驗_advantech（回選單）
+      { name: 'advantechBackToWorkExperience', from: 'workExperience_Advantech', to: 'workExperience' }, // 回工作經驗
+      { name: 'leaveWorkExperience', from: 'workExperience', to: 'mainMenu' }, // 工作經驗
       { name: 'projects', from: 'mainMenu', to: 'projects' }, // 專案作品
       { name: 'skills', from: 'mainMenu', to: 'skills' }, // 專長技能
     ],
@@ -85,6 +89,26 @@ const eventFromStateAndMessageText = (state, text) => {
       return 'leaveSchool';
     }
   }
+  case 'workExperience':
+  {
+    switch (text) {
+    case 'Xinhe 在研華科技...':
+      return 'advantech';
+    default:
+      return 'leaveWorkExperience';
+    }
+  }
+  case 'workExperience_Advantech':
+  {
+    switch (text) {
+    case '回選單':
+      return 'leaveAdvantech';
+    case '回工作經驗':
+      return 'advantechBackToWorkExperience';
+    default:
+      return 'advantechBackToWorkExperience';
+    }
+  }
   default:
     return 'gotStart';
   }
@@ -134,6 +158,326 @@ const mainMenu = (event) => {
         },
       });
     });
+};
+
+const workExperienceMenu = (event) => {
+  client.replyMessage(event.replyToken, {
+    type: 'flex',
+    altText: '實習工作經歷',
+    contents: {
+      type: 'carousel',
+      contents: [
+        {
+          type: 'bubble',
+          direction: 'ltr',
+          body: {
+            type: 'box',
+            layout: 'vertical',
+            contents: [
+              {
+                type: 'image',
+                url: 'https://www.avnet.com/opasdata/d120001/derivates/3/072/350/Advantech_logo_web.png',
+                margin: 'none',
+                size: 'full',
+                aspectRatio: '16:9',
+                aspectMode: 'fit',
+              },
+              {
+                type: 'text',
+                text: '網頁開發 Intern',
+                size: 'lg',
+                margin: 'xl',
+                weight: 'bold',
+                color: '#4A4A4A',
+              },
+              {
+                type: 'text',
+                text: '@ 研華科技',
+                margin: 'sm',
+                size: 'md',
+                align: 'start',
+                weight: 'bold',
+                color: '#AEAEAE',
+              },
+              {
+                type: 'box',
+                layout: 'vertical',
+                spacing: 'xs',
+                margin: 'md',
+                contents: [
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'icon',
+                        url: 'https://img.icons8.com/color/48/000000/marker.png',
+                        aspectRatio: '1:1',
+                      },
+                      {
+                        type: 'text',
+                        text: '台北市, 內湖',
+                        margin: 'md',
+                        size: 'sm',
+                        align: 'start',
+                        gravity: 'center',
+                        color: '#818181',
+                      },
+                    ],
+                  },
+                  {
+                    type: 'box',
+                    layout: 'vertical',
+                    contents: [
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        contents: [
+                          {
+                            type: 'icon',
+                            url: 'https://img.icons8.com/color/48/000000/calendar.png',
+                          },
+                          {
+                            type: 'text',
+                            text: '2018/01 - 2018/07',
+                            size: 'sm',
+                            margin: 'md',
+                            color: '#818181',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          footer: {
+            type: 'box',
+            layout: 'horizontal',
+            contents: [
+              {
+                type: 'button',
+                action: {
+                  type: 'postback',
+                  label: '了解更多',
+                  data: 'Advantech',
+                  text: 'Xinhe 在研華科技...',
+                },
+                color: '#B9AFAF',
+                style: 'primary',
+              },
+            ],
+          },
+        },
+        {
+          type: 'bubble',
+          direction: 'ltr',
+          body: {
+            type: 'box',
+            layout: 'vertical',
+            contents: [
+              {
+                type: 'image',
+                url: 'https://t.kfs.io/upload_images/61083/105-1202____-____-___-02_promote.png',
+                margin: 'none',
+                size: 'full',
+                aspectRatio: '16:9',
+                aspectMode: 'fit',
+              },
+              {
+                type: 'text',
+                text: '軟體開發 Intern',
+                size: 'lg',
+                margin: 'xl',
+                weight: 'bold',
+                color: '#4A4A4A',
+              },
+              {
+                type: 'text',
+                text: '@ 創科資訊',
+                margin: 'sm',
+                size: 'md',
+                align: 'start',
+                weight: 'bold',
+                color: '#AEAEAE',
+              },
+              {
+                type: 'box',
+                layout: 'vertical',
+                spacing: 'xs',
+                margin: 'md',
+                contents: [
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'icon',
+                        url: 'https://img.icons8.com/color/48/000000/marker.png',
+                        aspectRatio: '1:1',
+                      },
+                      {
+                        type: 'text',
+                        text: '台中市, 北區',
+                        size: 'sm',
+                        margin: 'md',
+                        align: 'start',
+                        gravity: 'center',
+                        color: '#818181',
+                      },
+                    ],
+                  },
+                  {
+                    type: 'box',
+                    layout: 'vertical',
+                    contents: [
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        contents: [
+                          {
+                            type: 'icon',
+                            url: 'https://img.icons8.com/color/48/000000/calendar.png',
+                          },
+                          {
+                            type: 'text',
+                            text: '2017/07 - 2018/01',
+                            size: 'sm',
+                            margin: 'md',
+                            color: '#818181',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          footer: {
+            type: 'box',
+            layout: 'horizontal',
+            contents: [
+              {
+                type: 'button',
+                action: {
+                  type: 'uri',
+                  label: '了解更多',
+                  uri: 'https://linecorp.com',
+                },
+                color: '#B9AFAF',
+                style: 'primary',
+              },
+            ],
+          },
+        },
+        {
+          type: 'bubble',
+          direction: 'ltr',
+          body: {
+            type: 'box',
+            layout: 'vertical',
+            contents: [
+              {
+                type: 'image',
+                url: 'https://taiwancloud.com/s/img/sites/logo1.png?20180302062003',
+                margin: 'none',
+                size: 'full',
+                aspectRatio: '16:9',
+                aspectMode: 'fit',
+                backgroundColor: '#303030',
+              },
+              {
+                type: 'text',
+                text: 'ERP專案開發 Intern',
+                margin: 'xl',
+                size: 'lg',
+                weight: 'bold',
+                color: '#4A4A4A',
+              },
+              {
+                type: 'text',
+                text: '@ 臺灣寬雲',
+                margin: 'sm',
+                size: 'md',
+                align: 'start',
+                weight: 'bold',
+                color: '#AEAEAE',
+              },
+              {
+                type: 'box',
+                layout: 'vertical',
+                spacing: 'xs',
+                margin: 'md',
+                contents: [
+                  {
+                    type: 'box',
+                    layout: 'baseline',
+                    contents: [
+                      {
+                        type: 'icon',
+                        url: 'https://img.icons8.com/color/48/000000/marker.png',
+                        aspectRatio: '1:1',
+                      },
+                      {
+                        type: 'text',
+                        text: '台中市, 南區',
+                        margin: 'md',
+                        size: 'sm',
+                        align: 'start',
+                        gravity: 'center',
+                        color: '#818181',
+                      },
+                    ],
+                  },
+                  {
+                    type: 'box',
+                    layout: 'vertical',
+                    contents: [
+                      {
+                        type: 'box',
+                        layout: 'baseline',
+                        contents: [
+                          {
+                            type: 'icon',
+                            url: 'https://img.icons8.com/color/48/000000/calendar.png',
+                          },
+                          {
+                            type: 'text',
+                            text: '2017/01 - 2017/03',
+                            margin: 'md',
+                            size: 'sm',
+                            color: '#818181',
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          footer: {
+            type: 'box',
+            layout: 'horizontal',
+            contents: [
+              {
+                type: 'button',
+                action: {
+                  type: 'uri',
+                  label: '了解更多',
+                  uri: 'https://linecorp.com',
+                },
+                color: '#B9AFAF',
+                style: 'primary',
+              },
+            ],
+          },
+        },
+      ],
+    },
+  });
 };
 
 stateMethod.gotStart = (event) => {
@@ -334,10 +678,107 @@ stateMethod.projects = (event) => {
 
 stateMethod.workExperience = (event) => {
   fsm.workExperience();
-  client.replyMessage(event.replyToken, {
-    type: 'text',
-    text: '經歷～～～ ',
-  });
+  workExperienceMenu(event);
+};
+
+stateMethod.leaveWorkExperience = (event) => {
+  fsm.leaveWorkExperience(); // change state
+  mainMenu(event);
+};
+
+stateMethod.advantech = (event) => {
+  fsm.advantech();
+  client.replyMessage(event.replyToken, [
+    {
+      type: 'text',
+      text: '\u{100077} 主要負責以 C# .NET MVC 5 開發與維護研華雲端軟體市集專案網站系統。',
+    },
+    {
+      type: 'text',
+      text: '\u{100077} 僅花費一星期，獨自研究並成功為研華導入網頁自動化測試與撰寫了50項測試案例，\n並完成持續整合(CI)流程，減少部門10%人力資源成本。',
+    },
+    {
+      type: 'text',
+      text: '\u{100077} 舉辦跨國技術分享會議，教導中國大陸昆山QA同仁及總部IT同仁自動化測試代碼撰寫及相關經驗。',
+    },
+    {
+      type: 'text',
+      text: '\u{100077} 與協理、PM、UI/UX 設計師及多位工程師合作開發雲端軟體市集和其他網站專案。',
+    },
+    {
+      type: 'flex',
+      altText: 'Flex Message',
+      contents: {
+        type: 'bubble',
+        header: {
+          type: 'box',
+          layout: 'horizontal',
+          contents: [
+            {
+              type: 'text',
+              text: '看看我在研華的實習心得',
+              size: 'sm',
+              weight: 'bold',
+              color: '#AAAAAA',
+            },
+          ],
+        },
+        hero: {
+          type: 'image',
+          url: 'https://cdn-images-1.medium.com/max/1600/0*mdXaoSSoDsq6TRgO.jpg',
+          size: 'full',
+          aspectRatio: '20:13',
+          aspectMode: 'cover',
+          action: {
+            type: 'uri',
+            label: 'Action',
+            uri: 'https://medium.com/@xinhe998/advantech-internship-f4ba6a13acf6',
+          },
+        },
+        footer: {
+          type: 'box',
+          layout: 'horizontal',
+          contents: [
+            {
+              type: 'button',
+              action: {
+                type: 'postback',
+                label: '回工作經驗',
+                data: '回工作經驗',
+                text: '回工作經驗',
+              },
+              flex: 1,
+              color: '#83728B',
+              margin: 'md',
+              style: 'primary',
+            },
+            {
+              type: 'button',
+              action: {
+                type: 'postback',
+                label: '回選單',
+                data: '回選單',
+                text: '回選單',
+              },
+              color: '#E1D5D5',
+              margin: 'md',
+              style: 'secondary',
+            },
+          ],
+        },
+      },
+    },
+  ]);
+};
+
+stateMethod.leaveAdvantech = (event) => {
+  fsm.leaveAdventch(); // change state
+  mainMenu(event);
+};
+
+stateMethod.advantechBackToWorkExperience = (event) => {
+  fsm.advantechBackToWorkExperience(); // change state
+  workExperienceMenu(event);
 };
 
 stateMethod.skills = (event) => {
