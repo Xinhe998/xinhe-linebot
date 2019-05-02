@@ -57,7 +57,7 @@ function createFsm() {
       { name: 'bonERPLang', from: 'projects_BonERP', to: 'projects_BonERP_Lang' }, // 專案作品_BonERP_程式語言
       { name: 'bonERPScreen', from: 'projects_BonERP', to: 'projects_BonERP_Screen' }, // 專案作品_BonERP_實際畫面
 
-      { name: 'skills', from: 'mainMenu', to: 'skills' }, // 專長技能
+      { name: 'skills', from: '*', to: 'skills' }, // 專長技能
     ],
     plugins: [
       new StateMachineHistory(),
@@ -101,6 +101,8 @@ export const eventFromStateAndMessageText = (state, text) => {
   case 'selfIntro_Interest':
   {
     switch (text) {
+    case undefined:
+      return 'gotStart';
     default:
       return 'leaveInterest';
     }

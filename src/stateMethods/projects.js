@@ -1,9 +1,12 @@
 import { fsm } from '../fsm';
 import { client } from '../botClient';
 import mainMenu from '../mainMenu';
+import { dispatchUserState, mapUserStateInFsm } from '../store';
 
 export const projects = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.projects();
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, {
     type: 'flex',
     altText: '專案作品',
@@ -237,7 +240,9 @@ export const projects = (event) => {
 };
 
 export const ghowa = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.ghowa(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -291,7 +296,9 @@ export const ghowa = (event) => {
 };
 
 export const ghowaRole = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.ghowaRole(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -338,11 +345,14 @@ export const ghowaRole = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToGhowa();
 };
 
 export const ghowaLang = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.ghowaLang(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -389,11 +399,14 @@ export const ghowaLang = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToGhowa();
 };
 
 export const ghowaScreen = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.ghowaScreen(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'flex',
@@ -523,11 +536,14 @@ export const ghowaScreen = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToGhowa();
 };
 
 export const meracle = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.meracle(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -581,7 +597,9 @@ export const meracle = (event) => {
 };
 
 export const meracleRole = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.meracleRole(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -628,11 +646,14 @@ export const meracleRole = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToMeracle();
 };
 
 export const meracleLang = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.meracleLang(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -679,11 +700,14 @@ export const meracleLang = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToMeracle();
 };
 
 export const meracleScreen = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.meracleScreen(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'flex',
@@ -805,11 +829,14 @@ export const meracleScreen = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToMeracle();
 };
 
 export const here = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.here(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -859,7 +886,9 @@ export const here = (event) => {
 };
 
 export const hereRole = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.hereRole(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -910,7 +939,9 @@ export const hereRole = (event) => {
 };
 
 export const hereLang = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.hereLang(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -961,7 +992,9 @@ export const hereLang = (event) => {
 };
 
 export const hereScreen = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.hereScreen(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'flex',
@@ -1083,11 +1116,14 @@ export const hereScreen = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToHERE();
 };
 
 export const bonERP = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.bonERP(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -1137,7 +1173,9 @@ export const bonERP = (event) => {
 };
 
 export const bonERPRole = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.bonERPRole(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -1188,7 +1226,9 @@ export const bonERPRole = (event) => {
 };
 
 export const bonERPLang = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.bonERPLang(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -1239,7 +1279,9 @@ export const bonERPLang = (event) => {
 };
 
 export const bonERPScreen = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.bonERPScreen(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'flex',
@@ -1321,10 +1363,13 @@ export const bonERPScreen = (event) => {
       },
     },
   ]);
+  mapUserStateInFsm(event.source.userId);
   fsm.backToBonERP();
 };
 
 export const leaveProjects = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.leaveProjects(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };

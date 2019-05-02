@@ -1,8 +1,9 @@
 import express from 'express';
 import * as line from '@line/bot-sdk';
-import { fsm, eventFromStateAndMessageText } from './src/fsm';
+import { eventFromStateAndMessageText } from './src/fsm';
 import { config } from './src/botClient';
 import stateMethod from './src/stateMethods';
+import { getUserState } from './src/store';
 
 const app = express();
 
@@ -14,9 +15,8 @@ const respondTo = (event) => {
   } else if (event.type === 'postback') {
     text = event.postback.data;
   }
-  const action = eventFromStateAndMessageText(fsm.state, text);
+  const action = eventFromStateAndMessageText(getUserState(event.source.userId), text);
   stateMethod[action](event);
-  console.log(fsm.history);
 };
 
 function handleEvent(event) {
@@ -25,6 +25,8 @@ function handleEvent(event) {
     if (event.type !== 'message') {
       return Promise.resolve(null);
     }
+    return respondTo(event);
+  case 'follow':
     return respondTo(event);
   case 'postback':
     if (event.type !== 'postback') {

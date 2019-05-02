@@ -1,8 +1,12 @@
 import { fsm } from '../fsm';
 import { client } from '../botClient';
+import { dispatchUserState, mapUserStateInFsm } from '../store';
+
 
 export default (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.skills();
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, {
     type: 'flex',
     altText: '專長＆技能樹',

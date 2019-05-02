@@ -2,19 +2,26 @@ import { fsm } from '../fsm';
 import { client } from '../botClient';
 import mainMenu from '../mainMenu';
 import workExperienceMenu from '../workExperienceMenu';
+import { dispatchUserState, mapUserStateInFsm } from '../store';
 
 export const workExperience = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.workExperience();
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   workExperienceMenu(event);
 };
 
 export const leaveWorkExperience = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.leaveWorkExperience(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };
 
 export const advantech = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.advantech();
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -99,7 +106,9 @@ export const advantech = (event) => {
 };
 
 export const trunkStudio = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.trunkStudio();
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'flex',
@@ -266,7 +275,9 @@ export const trunkStudio = (event) => {
 };
 
 export const taiwanCloud = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.taiwanCloud();
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [
     {
       type: 'text',
@@ -280,21 +291,29 @@ export const taiwanCloud = (event) => {
 };
 
 export const leaveAdvantech = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.leaveAdvantech(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };
 
 export const advantechBackToWorkExperience = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.advantechBackToWorkExperience(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   workExperienceMenu(event);
 };
 
 export const leaveTrunkStudio = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.leaveTrunkStudio(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };
 
 export const trunkStudioBackToWorkExperience = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.trunkStudioBackToWorkExperience(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   workExperienceMenu(event);
 };

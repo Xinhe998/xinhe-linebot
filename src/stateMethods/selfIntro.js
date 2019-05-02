@@ -1,9 +1,12 @@
 import { fsm } from '../fsm';
 import { client } from '../botClient';
 import mainMenu from '../mainMenu';
+import { dispatchUserState, mapUserStateInFsm } from '../store';
 
 export const selfIntro = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.selfIntro(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, [{
     type: 'sticker',
     packageId: '11537',
@@ -51,7 +54,9 @@ export const selfIntro = (event) => {
 };
 
 export const school = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.school(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, {
     type: 'flex',
     altText: 'Flex Message',
@@ -126,12 +131,16 @@ export const school = (event) => {
 };
 
 export const leaveSchool = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.leaveSchool(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };
 
 export const interest = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.interest(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   client.replyMessage(event.replyToken, {
     type: 'template',
     altText: '關於Xinhe喜歡的事物...',
@@ -176,11 +185,15 @@ export const interest = (event) => {
 };
 
 export const leaveInterest = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.leaveInterest(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };
 
 export const laeveSelfIntro = (event) => {
+  mapUserStateInFsm(event.source.userId);
   fsm.laeveSelfIntro(); // change state
+  dispatchUserState(event.source.userId, fsm.state, event.message.text);
   mainMenu(event);
 };
